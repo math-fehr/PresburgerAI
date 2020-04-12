@@ -1,3 +1,2 @@
 (coq.theory
-  (name PresburgerAI)
-  (modules :standard))
+  (name PresburgerAI))
