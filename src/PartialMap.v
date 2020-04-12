@@ -33,7 +33,7 @@ Module PartialMap.
 
 End PartialMap.
 
-(** Notation for an empty map **)
+(** Notation for an map with a single value **)
 Notation "k '!->' v" :=
   (PartialMap.put PartialMap.empty k v) (at level 100).
 
