@@ -45,3 +45,4 @@ Notation "k '!->' v ';' m" :=
 Notation "k '!->' '_' ';' m" :=
   (PartialMap.remove m k) (at level 100, right associativity).
 
+Notation PartialMap := PartialMap.PartialMap.
