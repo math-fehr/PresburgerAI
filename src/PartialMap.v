@@ -1,13 +1,14 @@
 (*! Definition of a partial map using lists !*)
 
-Require Import List EquivDec.
+Require Import List.
+Require Export PresburgerAI.EqDec.
 
 Module PartialMap.
 
   Section Methods.
 
     (** Definition of a partial map defined by a list of (Key, Value) pairs **)
-    Definition PartialMap Key Value := list (Key * Value).
+    Definition PartialMap Key Value {EqKey: EqDec Key eq} := list (Key * Value).
 
     Context {Key: Type}
             {Value: Type}
@@ -18,12 +19,12 @@ Module PartialMap.
 
     (** Get the value of a key **)
     Definition get (m: PartialMap Key Value) (k: Key) :=
-      let pair := find (fun '(k', v) => if equiv_dec k k' then true else false) m in
+      let pair := find (fun '(k', v) => k == k') m in
       option_map (fun '(key, val) => val) pair.
 
     (** Remove a key **)
     Definition remove (m: PartialMap Key Value) (k: Key) :=
-      filter (fun '(k', v) => if equiv_dec k k' then false else true) m.
+      filter (fun '(k', v) => k == k') m.
 
     (** Set the value of a key **)
     Definition put (m: PartialMap Key Value) (k: Key) (v: Value) :=
@@ -44,5 +45,7 @@ Notation "k '!->' v ';' m" :=
 (** Notation for a map remove **)
 Notation "k '!->' '_' ';' m" :=
   (PartialMap.remove m k) (at level 100, right associativity).
+
+Coercion PartialMap.get : PartialMap.PartialMap >-> Funclass.
 
 Notation PartialMap := PartialMap.PartialMap.
