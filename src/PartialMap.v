@@ -22,6 +22,13 @@ Module PartialMap.
       let pair := find (fun '(k', v) => k == k') m in
       option_map (fun '(key, val) => val) pair.
 
+    (** Check if a key is present **)
+    Definition has (m: PartialMap Key Value) (k: Key) :=
+      match get m k with
+      | Some _ => true
+      | None => false
+      end.
+
     (** Remove a key **)
     Definition remove (m: PartialMap Key Value) (k: Key) :=
       filter (fun '(k', v) => k == k') m.
