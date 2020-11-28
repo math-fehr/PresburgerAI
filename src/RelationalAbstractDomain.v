@@ -11,7 +11,7 @@ Inductive transitive_closure {T: Type} (R: (T * T) -> Prop) : (T * T) -> Prop :=
 Section RelationalAbstractDomainDefinition.
 
   Context {ConcreteState AbstractState: Type}
-          (A: AbstractDomain (ConcreteState * ConcreteState) AbstractState).
+          {AD: AbstractDomain (ConcreteState * ConcreteState) AbstractState}.
 
   (** An abstract domain over relations of concrete states
       In opposition to the standard abstract domain, we can
@@ -35,3 +35,5 @@ Section RelationalAbstractDomainDefinition.
     }.
 
 End RelationalAbstractDomainDefinition.
+
+Arguments RelationalAbstractDomain {ConcreteState AbstractState} AD.
