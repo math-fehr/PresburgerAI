@@ -8,18 +8,13 @@ Class AbstractDomain (ConcreteType AbstractType: Type) :=
   join : AbstractType -> AbstractType -> AbstractType;
 
   gamma : AbstractType -> Ensemble ConcreteType;
+  le a1 a2 := Included _ (gamma a1) (gamma a2);
 
   gamma_top : forall x, Ensembles.In ConcreteType (gamma top) x;
   gamma_bot : forall x, ~ Ensembles.In ConcreteType (gamma bot) x;
   join_sound_l : forall a1 a2, Included _ (gamma a1) (gamma (join a1 a2));
   join_sound_r : forall a1 a2, Included _ (gamma a2) (gamma (join a1 a2));
 }.
-
-(** Order relation on abstract states **)
-Definition le {ConcreteType AbstractType: Type}
-           {ad: AbstractDomain ConcreteType AbstractType}
-           (a1 a2: AbstractType)
-  := Included _ (gamma a1) (gamma a2).
 
 Section AbstractDomainTheorems.
 
