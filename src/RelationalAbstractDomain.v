@@ -1,4 +1,4 @@
-From PresburgerAI Require Import AbstractDomain.
+From PresburgerAI Require Export AbstractDomain.
 Require Export Coq.Sets.Ensembles.
 
 (** Smallest relation containing the identity and closed by application **)
