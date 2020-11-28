@@ -3,8 +3,7 @@ From PresburgerAI Require Export RelationalAbstractDomain Imp.
 Section TransferFunctionDefinition.
 
   Context {AbstractState: Type}
-          {adom: AbstractDomain (State * State) AbstractState}
-          (AR: RelationalAbstractDomain adom).
+          {adom: AbstractDomain (State * State) AbstractState}.
 
   (** Properties on abstract domain to be able to use the abstract interpreter
       for Imp **)
@@ -17,3 +16,5 @@ Section TransferFunctionDefinition.
   }.
 
 End TransferFunctionDefinition.
+
+Arguments TransferFunction {AbstractState} adom.
