@@ -1,7 +1,7 @@
 From Coq Require Export Ensembles.
 
 (** An abstract domain **)
-Class adom (ConcreteType AbstractType: Type) :=
+Class AbstractDomain (ConcreteType AbstractType: Type) :=
 {
   bot : AbstractType;
   top : AbstractType;
@@ -17,14 +17,14 @@ Class adom (ConcreteType AbstractType: Type) :=
 
 (** Order relation on abstract states **)
 Definition le {ConcreteType AbstractType: Type}
-           {ad: adom ConcreteType AbstractType}
+           {ad: AbstractDomain ConcreteType AbstractType}
            (a1 a2: AbstractType)
   := Included _ (gamma a1) (gamma a2).
 
 Section AbstractDomainTheorems.
 
   Context {ConcreteType AbstractType: Type}
-          {ad: adom ConcreteType AbstractType}.
+          {ad: AbstractDomain ConcreteType AbstractType}.
 
   Theorem le_refl :
     forall a, le a a.
