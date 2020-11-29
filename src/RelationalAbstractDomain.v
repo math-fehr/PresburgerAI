@@ -4,9 +4,17 @@ Require Export Coq.Sets.Ensembles.
 (** Smallest relation containing the identity and closed by application **)
 Inductive transitive_closure {T: Type} (R: (T * T) -> Prop) : (T * T) -> Prop :=
 | tc_id : forall x, transitive_closure R (x, x)
-| tc_app : forall x y z, transitive_closure R (x, y) ->
-                    R (y, z) ->
+| tc_app : forall x y z, R (x, y) ->
+                    transitive_closure R (y, z) ->
                     transitive_closure R (x, z).
+
+Lemma le_transitive_closure {T: Type} (R1 R2: (T * T) -> Prop) :
+  (forall x, R1 x -> R2 x) -> forall x, transitive_closure R1 x -> transitive_closure R2 x.
+Proof.
+  intros.
+  induction H0; [ constructor | ].
+  eauto using tc_app.
+Qed.
 
 Section RelationalAbstractDomainDefinition.
 
