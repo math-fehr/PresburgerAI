@@ -1,6 +1,6 @@
 (*! Definition of a small imperative language !*)
 
-From PresburgerAI Require Export TotalMap EqDec.
+From PresburgerAI Require Export TotalMap EqDec RelationalAbstractDomain.
 From Coq Require Export Strings.String ZArith List.
 
 Open Scope list_scope.
@@ -68,3 +68,38 @@ Inductive semantics : Program -> State -> State -> Prop :=
     s =[ PWhile var p ]=> s
 where "st =[ p ]=> st'" := (semantics p st st').
 
+Section ImpLemmas.
+
+  (** When we are out of the while loop, the condition is false **)
+  Lemma while_out_cond cond p s s' :
+    s =[ PWhile cond p ]=> s' ->
+    s' cond = 0.
+  Proof.
+    intros.
+    remember (PWhile _ _).
+    induction H; try discriminate; inversion Heqp0; subst; auto.
+  Qed.
+
+  (** equivalence with the denotational semantics**)
+  Lemma while_trans_closure cond p s s' :
+    s =[ PWhile cond p ]=> s' <->
+    transitive_closure (fun (s: State * State) => ((fst s) cond <> 0) /\ (fst s) =[ p ]=> (snd s)) (s, s') /\ s' cond = 0.
+  Proof.
+    split; intros.
+    - split; [ | eauto using while_out_cond ].
+      remember (PWhile _ _).
+      induction H; try discriminate; inversion Heqp0; subst; [ | constructor ].
+      specialize (IHsemantics2 eq_refl).
+      eapply tc_app; [ | eauto].
+      auto.
+    - destruct H.
+      remember (s, s').
+      generalize dependent s'.
+      generalize dependent s.
+      induction H; intros; inversion Heqp0; subst; [ constructor; auto | ].
+      destruct H.
+      simpl in *.
+      eapply EWhileTrue; eauto.
+  Qed.
+
+End ImpLemmas.
