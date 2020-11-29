@@ -1,7 +1,7 @@
 (*! Definition of a small imperative language !*)
 
-From PresburgerAI Require Import TotalMap EqDec.
-From Coq Require Import Strings.String ZArith List.
+From PresburgerAI Require Export TotalMap EqDec.
+From Coq Require Export Strings.String ZArith List.
 
 Open Scope list_scope.
 Open Scope Z_scope.
@@ -23,7 +23,7 @@ Inductive Program :=
 | PWhile (cond: Vid) (p1: Program).
 
 (** A state in the program **)
-Definition State := TotalMap Vid Z.
+Notation State := (TotalMap Vid Z).
 
 (** Execute a binary operation given both operands values **)
 Definition execute_binop (opc: BinOpCode) (v1 v2: Z) :=
