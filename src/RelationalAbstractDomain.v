@@ -30,8 +30,8 @@ Section RelationalAbstractDomainDefinition.
 
     compose_transitive : AbstractState -> AbstractState;
     compose_transitive_spec :
-      forall c1 c2 a, in_dom (c1, c2) (compose_transitive a) ->
-                 transitive_closure (gamma a) (c1, c2)
+      forall c1 c2 a, transitive_closure (gamma a) (c1, c2) ->
+                 in_dom (c1, c2) (compose_transitive a);
     }.
 
 End RelationalAbstractDomainDefinition.
