@@ -19,13 +19,13 @@ Section TransferFunctionDefinition.
     filter_true_value : Vid n -> AbstractState;
     filter_true_value_sound :
       forall (var: Vid n) (s: State n),
-        (s var) <> 0%Z ->
+        (array_get s var) <> 0%Z ->
         in_dom (s, s) (filter_true_value var);
 
     filter_false_value : Vid n -> AbstractState;
     filter_false_value_sound :
       forall (var: Vid n) (s: State n),
-        (s var) = 0%Z ->
+        (array_get s var) = 0%Z ->
         in_dom (s, s) (filter_false_value var)
   }.
 

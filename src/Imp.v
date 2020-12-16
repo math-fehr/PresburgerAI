@@ -24,7 +24,7 @@ Inductive Program {n: nat} :=
 Arguments Program : clear implicits.
 
 (** A state in the program **)
-Notation State n := (TotalMap (Vid n) Z).
+Notation State n := (Array Z n).
 
 (** Execute a binary operation given both operands values **)
 Definition execute_binop (opc: BinOpCode) (v1 v2: Z) :=
@@ -36,7 +36,7 @@ Definition execute_binop (opc: BinOpCode) (v1 v2: Z) :=
 
 (** Execute a binary operation on a state **)
 Definition execute_binop_state {n: nat} (opc: BinOpCode) (op1 op2: Vid n) (s: State n) :=
-  execute_binop opc (s op1) (s op2).
+  execute_binop opc (array_get s op1) (array_get s op2).
 
 (** Notation for relational semantics **)
 Reserved Notation
@@ -46,26 +46,26 @@ Reserved Notation
 (** Relational semantics of a program **)
 Inductive semantics {n: nat} : Program n -> State n -> State n -> Prop :=
 | EBinop res opc op1 op2 s :
-  s =[ PBinop res opc op1 op2 ]=> (res !!-> execute_binop_state opc op1 op2 s; s)
+  s =[ PBinop res opc op1 op2 ]=> (array_set s res (execute_binop_state opc op1 op2 s))
 | ESeq p1 p2 s s' s'' :
     s =[ p1 ]=> s' ->
     s' =[ p2 ]=> s'' ->
     s =[ PSeq p1 p2 ]=> s''
 | EIfTrue var p_true p_false (s s': State n) :
-    (s var) <> 0%Z ->
+    (array_get s var) <> 0%Z ->
     s =[ p_true ]=> s' ->
     s =[ PIf var p_true p_false ]=> s'
 | EIfFalse var p_true p_false (s s': State n) :
-    (s var) = 0%Z ->
+    (array_get s var) = 0%Z ->
     s =[ p_false ]=> s' ->
     s =[ PIf var p_true p_false ]=> s'
 | EWhileTrue var p (s s' s'': State n) :
-    (s var) <> 0%Z ->
+    (array_get s var) <> 0%Z ->
     s =[ p ]=> s' ->
     s' =[ PWhile var p ]=> s'' ->
     s =[ PWhile var p ]=> s''
 | EWhileFalse var p (s: State n) :
-    (s var) = 0%Z ->
+    (array_get s var) = 0%Z ->
     s =[ PWhile var p ]=> s
 where "st =[ p ]=> st'" := (semantics p st st').
 
@@ -74,7 +74,7 @@ Section ImpLemmas.
   (** When we are out of the while loop, the condition is false **)
   Lemma while_out_cond n cond p s s' :
     s =[ @PWhile n cond p ]=> s' ->
-    s' cond = 0%Z.
+    array_get s' cond = 0%Z.
   Proof.
     intros.
     remember (PWhile _ _).
@@ -84,7 +84,7 @@ Section ImpLemmas.
   (** equivalence with the denotational semantics**)
   Lemma while_trans_closure n cond p s s' :
     s =[ @PWhile n cond p ]=> s' <->
-    transitive_closure (fun (s: State n * State n) => ((fst s) cond <> 0%Z) /\ (fst s) =[ p ]=> (snd s)) (s, s') /\ s' cond = 0%Z.
+    transitive_closure (fun (s: State n * State n) => (array_get (fst s) cond <> 0%Z) /\ (fst s) =[ p ]=> (snd s)) (s, s') /\ array_get s' cond = 0%Z.
   Proof.
     split; intros.
     - split; [ | eauto using while_out_cond ].
