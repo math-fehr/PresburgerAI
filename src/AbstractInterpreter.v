@@ -3,11 +3,12 @@ From PresburgerAI Require Export Imp TransferFunction.
 Section AbstractInterpreter.
 
   Context {AbstractState: Type}
-          {adom: AbstractDomain (State * State) AbstractState}
+          {n: nat}
+          {adom: AbstractDomain (State n * State n) AbstractState}
           {adom_relational: RelationalAbstractDomain adom}
           {transfer_function: TransferFunction adom}.
 
-  Fixpoint interpret (p: Program) :=
+  Fixpoint interpret (p: Program n) :=
     match p with
     | PBinop res opc op1 op2 =>
       transfer_binop res opc op1 op2
@@ -30,11 +31,12 @@ End AbstractInterpreter.
 Section AbstractInterpreterSoundness.
 
   Context {AbstractState: Type}
-          {adom: AbstractDomain (State * State) AbstractState}
+          {n: nat}
+          {adom: AbstractDomain (State n * State n) AbstractState}
           (adom_relational: RelationalAbstractDomain adom)
           {transfer_function: TransferFunction adom}.
 
-  Lemma interpret_sound (p: Program) :
+  Lemma interpret_sound (p: Program n) :
     forall s s', s =[ p ]=> s' -> in_dom (s, s') (interpret p).
   Proof.
     induction p; simpl; intros.
