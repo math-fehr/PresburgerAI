@@ -1,8 +1,16 @@
 Require Export EquivDec.
 Require Import Strings.String.
 Require Import Coq.Logic.ProofIrrelevance.
+Require Import Coq.Relations.Relation_Definitions.
 
 Coercion is_left A B (u : {A} + {B}) := if u then true else false.
+
+Lemma equiv_dec_refl : forall {T} (x: T) {R: T -> T -> Prop} {equiv: Equivalence R} {ED: EqDec T R},
+    exists p, equiv_dec x x = left p.
+Proof.
+  intros.
+  destruct (equiv_dec x x); eauto; intuition.
+Qed.
 
 Global Instance string_eqdec : EqDec string eq := string_dec.
 
