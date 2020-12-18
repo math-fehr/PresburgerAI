@@ -46,7 +46,7 @@ Lemma nth_set_nth :
     n1 < length l ->
     n2 < length l ->
     forall t, nth_error (set_nth l n1 t) n2 =
-         if n1 == n2 then
+         if n1 ==b n2 then
            Some t
          else
            nth_error l n2.
@@ -59,12 +59,10 @@ Proof.
     apply lt_S_n in H.
     apply lt_S_n in H0.
     rewrite IHl; auto.
-    destruct (n1 == n2).
-    + cbv in e. subst.
-      destruct (S n2 == S n2); intuition.
-    + destruct (S n1 == S n2); intuition.
-      inversion e.
-      subst. intuition.
+    destruct (n1 ==b n2) eqn:?; simpl_eqb.
+    + reflexivity.
+    + destruct (S n1 == S n2);
+      simpl_eqb; intuition.
 Qed.
 
 (** Set the value on an index **)
@@ -85,7 +83,7 @@ Proof.
   destruct a, i.
   simpl in *; subst.
   rewrite nth_set_nth; intuition.
-  pose proof (equiv_dec_refl x0) as [? ?].
+  pose proof (equiv_decb_refl x0).
   rewrite H; auto.
 Qed.
 
@@ -101,12 +99,17 @@ Proof.
   destruct a. simpl.
   destruct i1, i2. subst.
   simpl (proj1_sig _).
-  rewrite nth_set_nth; intuition.
-  destruct (equiv_dec x0 x1).
-  - destruct e.
-    exfalso.
+  rewrite nth_set_nth; auto.
+  destruct (equiv_dec x0 x1); simpl_eqb.
+  - exfalso.
     apply H.
     f_equal.
     apply proof_irrelevance.
   - auto using nth_error_nth'.
 Qed.
+
+Hint Rewrite @array_get_set_eq : rwutils.
+Hint Rewrite @array_get_set_ne using solve [auto 2] : rwutils.
+
+Hint Rewrite Bool.andb_true_r Bool.andb_true_l Bool.andb_false_r Bool.andb_false_l
+     Bool.orb_true_r Bool.orb_true_l Bool.orb_false_r Bool.orb_false_l : rwutils.

@@ -19,7 +19,7 @@ Module PartialMap.
 
     (** Get the value of a key **)
     Definition get (m: PartialMap Key Value) (k: Key) :=
-      let pair := find (fun '(k', v) => k == k') m in
+      let pair := find (fun '(k', v) => k ==b k') m in
       option_map (fun '(key, val) => val) pair.
 
     (** Check if a key is present **)
@@ -31,7 +31,7 @@ Module PartialMap.
 
     (** Remove a key **)
     Definition remove (m: PartialMap Key Value) (k: Key) :=
-      filter (fun '(k', v) => k == k') m.
+      filter (fun '(k', v) => k ==b k') m.
 
     (** Set the value of a key **)
     Definition put (m: PartialMap Key Value) (k: Key) (v: Value) :=
